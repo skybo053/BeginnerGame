@@ -123,7 +123,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 		 System.out.println("Size: " + bulletList.size() + "   Last move: " + p1.getLast() + 
 				(p1.getFiring() ? "   Player is firing" : "   Player is not firing" + " Enemy list size: " +
-		          enemyList.size()));   
+		          enemyList.size())); 
 		
 	}
 	
