@@ -67,6 +67,9 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	}
 	
 	
+	//===========================================================
+	//new thread, init player, bufferedImage, bullets, enemies, game loop.  Calls update, render, draw
+	//==========================================================
 	public void run(){
 		running = true;
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
@@ -112,6 +115,10 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		}
 	}
 
+	//===========================================
+	//update objects
+	//=============================================
+	
 	public void update(){
 		//player
 		p1.update();
@@ -136,7 +143,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		//check for collision
 		
 			for(int i = 0; i < bulletList.size(); ++i){
-			
+				
 			double bX = bulletList.get(i).getX();
 			double bY = bulletList.get(i).getY();
 			
@@ -150,10 +157,18 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				
 				double distance = Math.sqrt((xSquared + ySquared));
 				
-				if(distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
+				
+				//check if bullet and enemy collision
+				if(bulletList.size() > 0 && distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
+					
 					bulletList.remove(i);
 					enemyList.remove(j);
 					enemiesKilled += 1;
+					
+					//if bullet list is empty exit checking for collisions with enemies
+					if(bulletList.size() == 0)
+						break;
+					
 				}
 			}
 		}
