@@ -54,9 +54,10 @@ public class Enemy {
 		
 	}
 	
+	//getters
 	public int getX(){ return x; }
 	public int getY(){ return y; }
-	
+	public int getR(){return r;}
 	
 	
 	public void update(List<Enemy> list){

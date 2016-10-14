@@ -14,6 +14,10 @@ import java.util.TimerTask;
 import javax.swing.JPanel;
 
 public class GameDisplay extends JPanel implements Runnable, KeyListener{
+	
+	//===================================================
+	// Instance variables
+	//===================================================
 	public static int width;
 	public static int height;
 	private Thread thread = null;
@@ -22,17 +26,19 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	private Graphics2D g;
 	private int fps = 30;
 	private double averageFPS;
-	
 	private int x = 10;
 	private int y = 10;
 	long waitTime;
 	public static Player p1;
 	public static ArrayList<Bullet> bulletList;
 	public ArrayList<Enemy> enemyList;
-	
 	private long enemyTimer;
 	private int enemyDelay;
 	
+	
+	//===============================================================
+	//Constructor
+	//================================================================
 	public GameDisplay(int width,  int height) {
 		super();
 		this.width = width;
@@ -46,6 +52,10 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 	}
 	
+	//======================================
+	//Called automatically when class is finished loading
+	//Starts thread 
+	//=================================================
 	public void addNotify(){
 		super.addNotify();
 		if(thread == null){
@@ -121,11 +131,30 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 			enemyList.get(i).update(enemyList);
 		}
 		
-		 System.out.println("Size: " + bulletList.size() + "   Last move: " + p1.getLast() + 
-				(p1.getFiring() ? "   Player is firing" : "   Player is not firing" + " Enemy list size: " +
-		          enemyList.size())); 
+		//check for collision
+		for(int i = 0; i < bulletList.size(); ++i){
+			
+			double bX = bulletList.get(i).getX();
+			double bY = bulletList.get(i).getY();
+			
+			for(int j = 0; j < enemyList.size(); ++j){
+				
+				double eX = enemyList.get(j).getX();
+				double eY = enemyList.get(j).getY();
+				
+				double xSquared = Math.pow((bX-eX), 2.0);
+				double ySquared = Math.pow((bY-eY), 2.0);
+				
+				double distance = Math.sqrt((xSquared + ySquared));
+				
+				if(distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
+					enemyList.remove(j);
+				}
+			}
+		}
 		
-	}
+		
+}//end of update method
 	
 	
 	

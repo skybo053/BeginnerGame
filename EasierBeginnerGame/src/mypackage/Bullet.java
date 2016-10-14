@@ -25,6 +25,7 @@ public class Bullet {
 	 
 	public int getY(){return pCenterY;}
 	public int getX(){return pCenterX;}
+	public int getR(){return r;}
 	
 	public void update(List<Bullet> list){
 		if(direction == "up" || direction == "start")
