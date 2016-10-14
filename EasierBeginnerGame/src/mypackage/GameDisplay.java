@@ -152,11 +152,8 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				double eX = enemyList.get(j).getX();
 				double eY = enemyList.get(j).getY();
 				
-				double xSquared = Math.pow((bX-eX), 2.0);
-				double ySquared = Math.pow((bY-eY), 2.0);
-				
-				double distance = Math.sqrt((xSquared + ySquared));
-				
+				//distance formula.  (x2 - x1)^2 + (y2 - y1)^2
+				double distance = Math.sqrt(((bX - eX) * (bX-eX)) + ((bY-eY) * (bY-eY)));
 				
 				//check if bullet and enemy collision
 				if(bulletList.size() > 0 && distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
@@ -164,10 +161,8 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 					bulletList.remove(i);
 					enemyList.remove(j);
 					enemiesKilled += 1;
-					
-					//if bullet list is empty exit checking for collisions with enemies
-					if(bulletList.size() == 0)
-						break;
+					--i;
+					break;
 					
 				}
 			}
