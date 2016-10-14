@@ -2,6 +2,7 @@ package mypackage;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -34,6 +35,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	public ArrayList<Enemy> enemyList;
 	private long enemyTimer;
 	private int enemyDelay;
+	private int enemiesKilled = 0;
 	
 	
 	//===============================================================
@@ -132,7 +134,8 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		}
 		
 		//check for collision
-		for(int i = 0; i < bulletList.size(); ++i){
+		
+			for(int i = 0; i < bulletList.size(); ++i){
 			
 			double bX = bulletList.get(i).getX();
 			double bY = bulletList.get(i).getY();
@@ -148,12 +151,13 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				double distance = Math.sqrt((xSquared + ySquared));
 				
 				if(distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
+					bulletList.remove(i);
 					enemyList.remove(j);
+					enemiesKilled += 1;
 				}
 			}
 		}
-		
-		
+	
 }//end of update method
 	
 	
@@ -162,6 +166,9 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 		g.setColor(Color.white);
 		g.fillRect(0,0,width, height);
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Calibri", Font.BOLD, 17));
+		g.drawString("Enemies destroyed: " + enemiesKilled, 5, 20);
 		
 		p1.draw(g);
 		for(int i = 0; i < bulletList.size(); i++){
