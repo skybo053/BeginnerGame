@@ -156,7 +156,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				double distance = Math.sqrt(((bX - eX) * (bX-eX)) + ((bY-eY) * (bY-eY)));
 				
 				//check if bullet and enemy collision
-				if(bulletList.size() > 0 && distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
+				if(distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
 					
 					bulletList.remove(i);
 					enemyList.remove(j);
