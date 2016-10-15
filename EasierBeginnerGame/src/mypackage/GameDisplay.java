@@ -171,26 +171,37 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 }//end of update method
 	
 	
-	
+	//==================================================
+	//Drawing to off screen bufferedImage
+	//==================================================
 	public void render(){
-		
+		//"erase" everything on image by drawing white rectangle
 		g.setColor(Color.white);
 		g.fillRect(0,0,width, height);
+		
+		//draw string in top of screen
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Calibri", Font.BOLD, 17));
 		g.drawString("Enemies destroyed: " + enemiesKilled, 5, 20);
 		
+		//draw player
 		p1.draw(g);
+		
+		//draw bullets
 		for(int i = 0; i < bulletList.size(); i++){
 			bulletList.get(i).draw(g);
 			}
+		
+		//draw enemies
 		for(int i = 0; i < enemyList.size(); i++){
 			enemyList.get(i).draw(g);
 		}
 	}
 	
 	
-	
+	//========================================================
+	//draw bufferedImage on panel
+	//========================================================
 	public void draw(){
 
 		Graphics g2 =  this.getGraphics();
