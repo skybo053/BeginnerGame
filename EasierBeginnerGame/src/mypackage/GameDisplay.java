@@ -5,13 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class GameDisplay extends JPanel implements Runnable, KeyListener{
@@ -38,6 +38,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	private int enemiesKilled = 0;
 	private int enemyXExplosion, enemyYExplosion;
 	private boolean enemyKilled;
+	private ImageIcon explodeImageIcon;
 	
 	//===============================================================
 	//Constructor
@@ -72,7 +73,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	//new thread, init player, bufferedImage, bullets, enemies, game loop.  Calls update, render, draw
 	//==========================================================
 	public void run(){
-		
+		explodeImageIcon = new ImageIcon("\\Enemy_Explode.png");
 		running = true;
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
 		//g = (Graphics2D) image.getGraphics();
@@ -211,7 +212,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 		//draw explosion if enemy killed
 		if(enemyKilled)
-		  g.drawString("BOOM", enemyXExplosion, enemyYExplosion);
+		  g.drawImage(explodeImageIcon.getImage(), enemyXExplosion, enemyYExplosion, null);
 	}
 	
 	
