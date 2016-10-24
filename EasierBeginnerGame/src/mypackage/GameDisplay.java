@@ -36,7 +36,8 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	private long enemyTimer;
 	private int enemyDelay;
 	private int enemiesKilled = 0;
-	
+	private int enemyXExplosion, enemyYExplosion;
+	private boolean enemyKilled;
 	
 	//===============================================================
 	//Constructor
@@ -71,6 +72,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	//new thread, init player, bufferedImage, bullets, enemies, game loop.  Calls update, render, draw
 	//==========================================================
 	public void run(){
+		
 		running = true;
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
 		//g = (Graphics2D) image.getGraphics();
@@ -78,6 +80,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		p1 = new Player();
 		bulletList = new ArrayList<>();
 		enemyList = new ArrayList<>();
+		
 		
 		long startTime;
 		int frameCount = 0;
@@ -89,6 +92,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 		while(running){
 			startTime = System.nanoTime();
+			enemyKilled = false;
 			
 			update();
 			render();
@@ -147,19 +151,27 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 			double bX = bulletList.get(i).getX();
 			double bY = bulletList.get(i).getY();
 			
+			
 			for(int j = 0; j < enemyList.size(); ++j){
 				
 				double eX = enemyList.get(j).getX();
 				double eY = enemyList.get(j).getY();
 				
+				
 				//distance formula.  (x2 - x1)^2 + (y2 - y1)^2
 				double distance = Math.sqrt(((bX - eX) * (bX-eX)) + ((bY-eY) * (bY-eY)));
+				System.out.println("Distance: " + distance);
 				
 				//check if bullet and enemy collision
-				if(distance < (bulletList.get(i).getR() + enemyList.get(j).getR())){
-					
+				if(distance <= (bulletList.get(i).getR() + enemyList.get(j).getR())){
+					System.out.println("Entering collision");
 					bulletList.remove(i);
 					enemyList.remove(j);
+					
+					enemyXExplosion = (int)eX;
+					enemyYExplosion = (int)eY; 
+					enemyKilled = true;
+					
 					enemiesKilled += 1;
 					--i;
 					break;
@@ -196,6 +208,10 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		for(int i = 0; i < enemyList.size(); i++){
 			enemyList.get(i).draw(g);
 		}
+		
+		//draw explosion if enemy killed
+		if(enemyKilled)
+		  g.drawString("BOOM", enemyXExplosion, enemyYExplosion);
 	}
 	
 	
@@ -210,6 +226,11 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	}
 	
 	
+	
+	//==============================================================================================
+	//               HANDLING PLAYER MOVEMENTS
+	//                 keyListener
+	//==============================================================================================
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		
