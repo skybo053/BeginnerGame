@@ -5,13 +5,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GameDisplay extends JPanel implements Runnable, KeyListener{
@@ -39,6 +40,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	private int enemyXExplosion, enemyYExplosion;
 	private boolean enemyKilled;
 	private ImageIcon explodeImageIcon;
+	JLabel label;
 	
 	//===============================================================
 	//Constructor
@@ -73,7 +75,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	//new thread, init player, bufferedImage, bullets, enemies, game loop.  Calls update, render, draw
 	//==========================================================
 	public void run(){
-		explodeImageIcon = new ImageIcon("\\Enemy_Explode.png");
+		explodeImageIcon = new ImageIcon(this.getClass().getResource("/Enemy_Explode.png"));
 		running = true;
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
 		//g = (Graphics2D) image.getGraphics();
@@ -188,6 +190,7 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	//Drawing to off screen bufferedImage
 	//==================================================
 	public void render(){
+		
 		//"erase" everything on image by drawing white rectangle
 		g.setColor(Color.white);
 		g.fillRect(0,0,width, height);
@@ -211,8 +214,12 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		}
 		
 		//draw explosion if enemy killed
-		if(enemyKilled)
-		  g.drawImage(explodeImageIcon.getImage(), enemyXExplosion, enemyYExplosion, null);
+		if(enemyKilled){
+			g.drawImage(explodeImageIcon.getImage(), enemyXExplosion, enemyYExplosion, null);
+		
+		}
+		 
+		  
 	}
 	
 	
