@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GameDisplay extends JPanel implements Runnable, KeyListener{
+public class GameDisplay extends JPanel implements Runnable, KeyListener {
 	
 	//===================================================
 	// Instance variables
@@ -37,10 +37,11 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	private long enemyTimer;
 	private int enemyDelay;
 	private int enemiesKilled = 0;
-	private int enemyXExplosion, enemyYExplosion;
-	private boolean enemyKilled;
+	private boolean enemyKilled = false;
 	private ImageIcon explodeImageIcon;
-	JLabel label;
+	private ArrayList<ExplosionIMG> explosionIMG;
+	private long explosionTimer;
+	private int explosionRemoveDelay;
 	
 	//===============================================================
 	//Constructor
@@ -55,6 +56,9 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		this.addKeyListener(this);
 		enemyTimer = System.nanoTime();
 		enemyDelay = 2000;
+		
+		explosionTimer = System.nanoTime();
+		explosionRemoveDelay = 300;
 		
 	}
 	
@@ -75,14 +79,14 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 	//new thread, init player, bufferedImage, bullets, enemies, game loop.  Calls update, render, draw
 	//==========================================================
 	public void run(){
-		explodeImageIcon = new ImageIcon(this.getClass().getResource("/Enemy_Explode.png"));
+		//explodeImageIcon = new ImageIcon(this.getClass().getResource("/Enemy_Explode.png"));
 		running = true;
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
-		//g = (Graphics2D) image.getGraphics();
 		g = image.createGraphics();
 		p1 = new Player();
 		bulletList = new ArrayList<>();
 		enemyList = new ArrayList<>();
+		explosionIMG = new ArrayList<>();
 		
 		
 		long startTime;
@@ -95,7 +99,6 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		
 		while(running){
 			startTime = System.nanoTime();
-			enemyKilled = false;
 			
 			update();
 			render();
@@ -147,8 +150,19 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 			enemyList.get(i).update(enemyList);
 		}
 		
-		//check for collision
+		//Removing explosion image from screen
+		for(int i = 0; i < explosionIMG.size(); ++i){
+			long explosionElapsed = (System.nanoTime() - explosionIMG.get(i).getTimer()) / 1000000;
+			if(explosionElapsed > explosionRemoveDelay){
+				explosionIMG.remove(i);
+				i--;
+			}
+		}
 		
+		
+		//=====================================================================
+		//check for collision
+		//=====================================================================
 			for(int i = 0; i < bulletList.size(); ++i){
 				
 			double bX = bulletList.get(i).getX();
@@ -163,18 +177,16 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				
 				//distance formula.  (x2 - x1)^2 + (y2 - y1)^2
 				double distance = Math.sqrt(((bX - eX) * (bX-eX)) + ((bY-eY) * (bY-eY)));
-				System.out.println("Distance: " + distance);
+				
 				
 				//check if bullet and enemy collision
 				if(distance <= (bulletList.get(i).getR() + enemyList.get(j).getR())){
-					System.out.println("Entering collision");
+					
 					bulletList.remove(i);
 					enemyList.remove(j);
 					
-					enemyXExplosion = (int)eX;
-					enemyYExplosion = (int)eY; 
-					enemyKilled = true;
-					
+					//Add explosion image to arraylist
+					explosionIMG.add(new ExplosionIMG(eX, eY)); 
 					enemiesKilled += 1;
 					--i;
 					break;
@@ -182,6 +194,11 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 				}
 			}
 		}
+			//=====================================================================
+			//END OF check for collision
+			//=====================================================================	
+			
+			
 	
 }//end of update method
 	
@@ -214,8 +231,13 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		}
 		
 		//draw explosion if enemy killed
-		//if(enemyKilled)
-			g.drawImage(explodeImageIcon.getImage(), enemyXExplosion, enemyYExplosion, null);
+		
+			for(int i = 0; i < explosionIMG.size(); ++i){
+				
+				explosionIMG.get(i).draw(g);
+			}
+		
+			
 		
 		
 		 
