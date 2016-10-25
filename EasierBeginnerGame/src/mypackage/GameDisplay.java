@@ -214,10 +214,10 @@ public class GameDisplay extends JPanel implements Runnable, KeyListener{
 		}
 		
 		//draw explosion if enemy killed
-		if(enemyKilled){
+		//if(enemyKilled)
 			g.drawImage(explodeImageIcon.getImage(), enemyXExplosion, enemyYExplosion, null);
 		
-		}
+		
 		 
 		  
 	}
