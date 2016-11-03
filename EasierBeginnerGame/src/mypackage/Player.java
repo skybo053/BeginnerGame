@@ -116,6 +116,47 @@ public class Player {
 		g.setColor(Color.black);
 		g.fillOval(x, y, r*2, r*2);
 		
+		drawTriangle(g);
+		
+	}
+	
+	public void drawTriangle(Graphics2D g){
+		
+		g.setColor(Color.decode("#65D3F7"));
+		
+		if(getLast() == "start" || getLast() == "up"){
+			int xPoints[] = {x + r, x + 4, x + r + r - 4};
+			int yPoints[] = {y, y + r + r - 6, y + r + r - 6};
+			int nPoints = 3;
+			
+			g.fillPolygon(xPoints, yPoints, nPoints);
+			
+		}
+		
+		if(getLast() == "left"){
+			int xPoints[] = {x, x+r+r-6, x+r+r-6};
+			int yPoints[] = {y+r, y+r+r-4, y+4};
+			int nPoints = 3;
+			
+			g.fillPolygon(xPoints, yPoints, nPoints);
+		}
+	
+		if(getLast() == "down"){
+			int xPoints[] = {x+r, x+r+r-4, x+4};
+			int yPoints[] = {y+r+r, y+6, y+6};
+			int nPoints = 3;
+			
+			g.fillPolygon(xPoints, yPoints, nPoints);
+		}
+		
+		if(getLast() == "right"){
+			int xPoints[] = {x+r+r, x+6, x+6};
+			int yPoints[] = {y+r, y+4, y+r+r-4};
+			int nPoints = 3;
+			
+			g.fillPolygon(xPoints, yPoints, nPoints);
+		}
+	
 	}
 	
 	public String getLast(){
